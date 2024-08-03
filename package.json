@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@rockyj/async-utils": "^1.0.6",
-    "fastify": "^4.21.0"
+    "fastify": "^4.28.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

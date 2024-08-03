@@ -16,7 +16,7 @@ export const getWeatherForCity = async (request: FastifyRequest, response: Fasti
     const maxTemp = Math.ceil((Math.random() * 100) % 40)
     const minTemp = maxTemp - Math.ceil((Math.random() * 100) % 12)
 
-    await delay(2000)
+    await delay(3000)
 
     await response.send({
       maxTemp,
