@@ -9,32 +9,29 @@
   },
   "scripts": {
     "clean": "rm -rf dist/ && mkdir dist",
-    "lint": "yarn eslint 'src/**/*'",
+    "lint": "yarn eslint",
     "test": "yarn jest",
     "build": "tsc",
     "server:dev": "nodemon src/index.ts"
   },
   "dependencies": {
     "@rockyj/async-utils": "^1.0.6",
-    "fastify": "^4.28.0"
+    "fastify": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.10.0",
     "@types/jest": "^29.5.0",
-    "@types/node": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.52.0",
-    "@typescript-eslint/parser": "^6.4.0",
-    "eslint": "^8.0.1",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-config-standard-with-typescript": "^37.0.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
-    "eslint-plugin-promise": "^6.0.0",
+    "@types/node": "^20.0.0",
+    "eslint": "^9.10.0",
+    "globals": "^15.9.0",
     "jest": "^29.5.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.0",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
-    "typescript": "5.1.6"
+    "typescript": "5.5.4",
+    "typescript-eslint": "^8.6.0"
   },
   "prettier": {
     "semi": false,
