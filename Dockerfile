@@ -1,16 +1,26 @@
-FROM oven/bun:1.0
+FROM --platform=linux/arm64 node:22-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --ignore-scripts
+
+COPY tsconfig.json ./
+COPY src ./src
+
+RUN npm run build
+
+# ---
+
+FROM --platform=linux/arm64 node:22-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --omit=dev --ignore-scripts
+
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 3001
 
-RUN mkdir -p /opt/app/src
-WORKDIR /opt/app
-
-ADD src /opt/app/src/
-ADD package.json /opt/app/
-
-# remove dev dependencies
-RUN sed -i '22,37d' package.json
-
-RUN bun install
-
-CMD [ "bun", "run", "src/index.ts" ]
+CMD ["node", "dist/index.js"]

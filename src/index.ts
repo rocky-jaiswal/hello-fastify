@@ -1,16 +1,24 @@
+import 'dotenv/config'
+
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify'
 
 import routing from './routing'
+import { registry } from './metrics'
+import redis from './repositories/redis'
 
-// Initialize server instance
 const server: FastifyInstance = Fastify({ logger: true })
 
 const port = parseInt(process.env.SERVER_PORT ?? '3001')
 
-// Startup
+server.get('/metrics', async (_req, reply) => {
+  reply.header('Content-Type', registry.contentType)
+  return registry.metrics()
+})
+
 const start = async () => {
   try {
+    await redis.connect()
     await server.register(routing, { prefix: '/v1' })
     await server.listen({ port, host: '::' })
   } catch (err) {
@@ -20,9 +28,5 @@ const start = async () => {
 }
 
 start()
-  .then(() => {
-    console.log('server started')
-  })
-  .catch(() => {
-    console.error('failed to start server')
-  })
+  .then(() => server.log.info('server started'))
+  .catch(() => server.log.error('failed to start server'))
