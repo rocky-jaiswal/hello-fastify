@@ -39,8 +39,8 @@ steps:
       # Clone-time credentials (netrc) aren't available in custom steps —
       # explicitly authenticate this push with the github_token secret.
       - git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/rocky-jaiswal/hello-fastify.git
-      - sed -i "s/tag:.*/tag: ${CI_COMMIT_SHA}/" helm/hello-fastify/values-dev.yaml
-      - git commit -am "ci: update image tag to ${CI_COMMIT_SHA}"
+      - 'sed -i "s/tag:.*/tag: ${CI_COMMIT_SHA}/" helm/hello-fastify/values-dev.yaml'
+      - 'git commit -am "ci: update image tag to ${CI_COMMIT_SHA}"'
       # CI checkouts are detached HEAD — push explicitly to main, not "git push"
       - git push origin HEAD:main
     # github_token: a GitHub PAT with repo write access, stored in Woodpecker's
