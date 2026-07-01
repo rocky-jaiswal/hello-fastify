@@ -1,0 +1,4 @@
+# Dev overrides. Woodpecker CI rewrites image.tag on every build via sed —
+# keep that line exactly as `  tag: <value>` so the CI regex keeps matching.
+image:
+  tag: manual-dev1

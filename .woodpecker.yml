@@ -1,0 +1,42 @@
+steps:
+  - name: lint-and-build
+    image: node:22-alpine
+    commands:
+      - npm ci
+      - npm run lint
+      - npm run build
+
+  - name: test
+    image: node:22-alpine
+    commands:
+      - npm ci
+      - npm test -- --passWithNoTests
+
+  - name: build-and-push
+    image: woodpeckerci/plugin-kaniko
+    environment:
+      AWS_REGION: eu-central-1
+    settings:
+      dockerfile: Dockerfile
+      context: .
+      registry: 750324395434.dkr.ecr.eu-central-1.amazonaws.com
+      repo: app-eks-api-dev
+      tags: ${CI_COMMIT_SHA}
+    # No registry credentials set — kaniko's built-in ECR credential helper
+    # picks up the devops-cluster-dev EC2 instance profile automatically.
+    # No docker socket needed — no privileged mode.
+    when:
+      branch: main
+
+  - name: update-image-tag
+    image: alpine/git
+    commands:
+      - git config user.email "ci@woodpecker"
+      - git config user.name "Woodpecker CI"
+      - sed -i "s/tag:.*/tag: ${CI_COMMIT_SHA}/" helm/hello-fastify/values-dev.yaml
+      - git commit -am "ci: update image tag to ${CI_COMMIT_SHA}"
+      - git push
+    secrets: [github_token]
+    # github_token stored in Woodpecker pipeline secrets (UI -> repo -> secrets)
+    when:
+      branch: main

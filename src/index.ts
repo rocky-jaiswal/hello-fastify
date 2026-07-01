@@ -5,7 +5,7 @@ import type { FastifyInstance } from 'fastify'
 
 import routing from './routing'
 import { registry } from './metrics'
-import redis from './repositories/redis'
+// import redis from './repositories/redis' // v1: re-enable when Redis is provisioned
 
 const server: FastifyInstance = Fastify({ logger: true })
 
@@ -18,7 +18,8 @@ server.get('/metrics', async (_req, reply) => {
 
 const start = async () => {
   try {
-    await redis.connect()
+    // v1: skipping redis.connect() until Redis is provisioned
+    // await redis.connect()
     await server.register(routing, { prefix: '/v1' })
     await server.listen({ port, host: '::' })
   } catch (err) {
