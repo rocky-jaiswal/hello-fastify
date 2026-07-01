@@ -28,22 +28,10 @@ steps:
     when:
       branch: main
 
-  - name: update-image-tag
-    image: alpine/git
-    environment:
-      GITHUB_TOKEN:
-        from_secret: github_token
-    commands:
-      - git config user.email "ci@woodpecker"
-      - git config user.name "Woodpecker CI"
-      # Clone-time credentials (netrc) aren't available in custom steps —
-      # explicitly authenticate this push with the github_token secret.
-      - git remote set-url origin https://rocky-jaiswal:${GITHUB_TOKEN}@github.com/rocky-jaiswal/hello-fastify.git
-      - 'sed -i "s/tag:.*/tag: ${CI_COMMIT_SHA}/" helm/hello-fastify/values-dev.yaml'
-      - 'git commit -am "ci: update image tag to ${CI_COMMIT_SHA}"'
-      # CI checkouts are detached HEAD — push explicitly to main, not "git push"
-      - git push origin HEAD:main
-    # github_token: a GitHub PAT with repo write access, stored in Woodpecker's
-    # per-repo secrets (UI -> repo -> Secrets)
-    when:
-      branch: main
+  # No "update-image-tag" step: it needs to git-push the new tag back to
+  # values-dev.yaml so ArgoCD picks it up, but the github_token secret never
+  # reached this step's environment (from_secret resolved empty, cause
+  # unresolved — not an event-scoping issue, tried recreating the secret too).
+  # For now, update helm/hello-fastify/values-dev.yaml's image.tag by hand
+  # after a build. Real fix: debug the secret further, or replace this with
+  # ArgoCD Image Updater (purpose-built for this, no CI-side git push needed).
