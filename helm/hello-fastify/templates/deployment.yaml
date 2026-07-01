@@ -18,6 +18,10 @@ spec:
         prometheus.io/port: "{{ .Values.containerPort }}"
         prometheus.io/path: "/metrics"
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: hello-fastify
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

@@ -5,6 +5,12 @@ image:
   tag: latest
   pullPolicy: Always
 
+# This K3s cluster isn't EKS-optimized, so containerd has no built-in ECR auth.
+# ecr-pull-secret is a manually-created docker-registry secret (12h token) —
+# see PLAN.md Known Gaps for the real fix (kubelet ECR credential provider).
+imagePullSecrets:
+  - name: ecr-pull-secret
+
 containerPort: 3001
 
 service:
