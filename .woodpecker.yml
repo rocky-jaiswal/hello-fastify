@@ -30,13 +30,20 @@ steps:
 
   - name: update-image-tag
     image: alpine/git
+    environment:
+      GITHUB_TOKEN:
+        from_secret: github_token
     commands:
       - git config user.email "ci@woodpecker"
       - git config user.name "Woodpecker CI"
+      # Clone-time credentials (netrc) aren't available in custom steps —
+      # explicitly authenticate this push with the github_token secret.
+      - git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/rocky-jaiswal/hello-fastify.git
       - sed -i "s/tag:.*/tag: ${CI_COMMIT_SHA}/" helm/hello-fastify/values-dev.yaml
       - git commit -am "ci: update image tag to ${CI_COMMIT_SHA}"
-      - git push
-    secrets: [github_token]
-    # github_token stored in Woodpecker pipeline secrets (UI -> repo -> secrets)
+      # CI checkouts are detached HEAD — push explicitly to main, not "git push"
+      - git push origin HEAD:main
+    # github_token: a GitHub PAT with repo write access, stored in Woodpecker's
+    # per-repo secrets (UI -> repo -> Secrets)
     when:
       branch: main

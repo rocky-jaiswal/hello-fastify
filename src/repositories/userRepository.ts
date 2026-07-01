@@ -21,7 +21,7 @@ class UserRepository {
       .returning(['id', 'name', 'email'])
       .insert({ name, email })) as UserRow[]
 
-    return User.create(rows[0].id, rows[0].name, rows[0].email)
+    return User.create(rows[0]!.id, rows[0]!.name, rows[0]!.email)
   }
 
   public async findById(id: string) {
