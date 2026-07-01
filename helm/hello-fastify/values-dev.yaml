@@ -1,4 +1,5 @@
-# Dev overrides. Woodpecker CI rewrites image.tag on every build via sed —
-# keep that line exactly as `  tag: <value>` so the CI regex keeps matching.
+# Dev overrides. image.tag is bumped by hand after a Woodpecker CI build —
+# the automated git-push-back step doesn't work yet (see PLAN.md Known Gaps
+# in the infra repo). Set it to the commit SHA Woodpecker just built/pushed.
 image:
   tag: 80c7d9706cc2c4b2daa663fad93c1fc8851f88ed
