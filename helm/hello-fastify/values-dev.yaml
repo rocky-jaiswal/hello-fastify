@@ -2,4 +2,4 @@
 # the automated git-push-back step doesn't work yet (see PLAN.md Known Gaps
 # in the infra repo). Set it to the commit SHA Woodpecker just built/pushed.
 image:
-  tag: 80c7d9706cc2c4b2daa663fad93c1fc8851f88ed
+  tag: 4c6a7b8da7641af5bfdce2a34e7973c96639adee
